@@ -45,10 +45,19 @@ def decrypt_file(file_path: str, fernet: Fernet) -> None:
     
     decrypted_text = decrypt(cipher, fernet)
 
-    # TODO: Function to generate name for decrypted file
-    decrypted_file_path = file_path + ".decrypted"
+    decrypted_file_path = generate_file_path(file_path)
     with open(decrypted_file_path, "w") as file: 
         file.write(decrypted_text)
+
+
+def generate_file_path(file_path: str):
+    if ".encrypted" in file_path:
+        file_path = file_path.replace(".encrypted", ".decrypted")
+    else:
+        file_path: str = file_path + ".decrypted"
+
+    return file_path
+
 
 
 
@@ -56,6 +65,7 @@ def main():
     parser = argparse.ArgumentParser(description="Encrypt or decrypt a file.")
     group  = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--encrypt", metavar="filename", help="The name of the file to encrypt.")
+    group.add_argument("--encrypt-with-key", nargs=2, metavar=("filename", "key"), help="The name of the file to encrypt and the encryption key.")
     group.add_argument("--decrypt", nargs=2, metavar=("filename", "key"), help="The name of the file to decrypt and the decryption key.")
     
     args = parser.parse_args()
@@ -67,12 +77,19 @@ def main():
         
         f = Fernet(key)
         encrypt_file(filename, f)
+
+    elif args.encrypt_with_key:
+        filename, key = args.encrypt_with_key
+        key = key.encode('utf-8')
+        
+        f = Fernet(key)
+        encrypt_file(filename, f)
     
     elif args.decrypt:
         filename, key = args.decrypt
         key = key.encode('utf-8')
+        
         f = Fernet(key)
-
         decrypt_file(filename, f)
 
 
