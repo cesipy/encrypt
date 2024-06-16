@@ -100,3 +100,6 @@ python script.py --decrypt example.txt.encrypted my_secret_key
 - Make sure to save your encryption keys securely, as they are essential for decrypting your files.
 - The script appends `.encrypted` to the filename for encrypted files and `.decrypted` for decrypted files.
 
+## To-Do
+- [ ] encryption for markdown - automatically read markdown code and put to markdown, maybe store metadata in encrypted file.
+- [ ] auto-complete for args
